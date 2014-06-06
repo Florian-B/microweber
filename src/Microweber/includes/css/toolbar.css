@@ -1231,13 +1231,18 @@ li .ts_action_item:last-child{
 }
 
 
-.tst-logo span{ left: -6px; top: 9px; }
+
 [class*='tst-'] .dd_rte_arr{ margin-right: 10px; margin-top: -3px; }
 .tst-modules span{ top: 16px; background-position: -99px 0; }
 .tst-add span{ top: 16px; background-position: -46px 0; }
 .tst-design span{ top: 16px; background-position: -149px 0; }
 
+.tst-logo span{
+    background: url(../img/liveeditmw.png) no-repeat center ;
+    background-size: contain;
+    left: -6px; top: 9px;
 
+}
 
 .toolbars-search{
   position: absolute;

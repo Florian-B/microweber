@@ -113,7 +113,7 @@ if(mw.cookie.get("helpinfoliveedit") != 'false'){
       <div class="toolbar-sections-tabs">
 
         <ul>
-          <li class="create-content-dropdown"> <a href="javascript:;" class="tst-logo" title="Microweber"> <span>Microweber</span> <i class=" dd_rte_arr right"></i> </a>
+          <li class="create-content-dropdown"> <a href="javascript:;" class="tst-logo" > <span  style="background-image: url(<?php print mw()->ui->live_edit_logo(); ?>);"></span> <i class=" dd_rte_arr right"></i> </a>
             <div class="mw-dropdown-list create-content-dropdown-list"
                          style="box-shadow: 2px 2px 10px -10px #111;width: 225px;">
               <div class="mw-dropdown-list-search">

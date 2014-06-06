@@ -26,12 +26,16 @@
       $past_page = mw('content')->link($past_page[0]['id']);
  
   }
-  
+
  ?>
 
 <div class="mw-v-table" id="mw_toolbar_nav">
     <a class="mw-cube-holder " id="mw-admin-toolbar-cube" href="<?php print admin_url(); ?>view:content">
-        <span class="mw-cube">  <span class="mw-cube1"><span id="mw_toolbar_logo" href="<?php print admin_url(); ?>"></span></span> </span> </a>
+        <span class="mw-cube">
+            <span class="mw-cube1">
+                 <span id="main-logo" style="background-image: url(<?php print mw()->ui->admin_logo(); ?>);"></span>
+            </span>
+        </span> </a>
 	<div class="mw-v-cell" style="width: 100%">
 		<?php if(is_admin()): ?>
 		<?php   $active = mw('url')->param('view'); ?>

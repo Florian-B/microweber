@@ -352,14 +352,13 @@ body.cross{
 #mw_logo_modules{
   display: block;
   float: left;
-  text-indent: -100%;
-  background-image: url(../img/logo_modules.png);
-  background-repeat: no-repeat, no-repeat;
-  background-position: left center, right bottom;
   margin: 0 15px;
   width: 210px;
   height: 40px;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
+
 
 #mw-toolbar-right{
     float: right;

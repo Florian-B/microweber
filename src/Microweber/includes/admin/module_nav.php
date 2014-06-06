@@ -9,7 +9,9 @@
 
 
 <div id="mw_toolbar_nav" class="mw-small-toolbar">
-    <a href="<?php print admin_url(); ?>view:dashboard" id="mw_logo_modules"></a>
+    <a href="<?php print admin_url(); ?>view:dashboard" id="mw_logo_modules" style="background-image: url(<?php print mw()->ui->admin_logo(); ?>);">
+
+    </a>
   <?php if(is_admin()): ?>
   <?php   $active = mw('url')->param('view'); ?>
     <a title="<?php _e("Back"); ?>" href="<?php print admin_url(); ?>view:modules" class="mw-ui-btn mw-btn-single-ico left back-to-admin-cookie"><span class="ico ilaquo"></span></a>
