@@ -48,8 +48,10 @@ class Files
     {
 
         $purge_cache_time = 86400; //one day
+
         if (defined('MW_CACHE_DIR')) {
             $dir = MW_CACHE_DIR . DIRECTORY_SEPARATOR;
+
             if (is_dir($dir)) {
                 $purge_lock = $dir . 'purge.lock';
                 $purge_lock = normalize_path($purge_lock, false);
@@ -62,6 +64,7 @@ class Files
                     }
                 }
             }
+
         }
     }
 

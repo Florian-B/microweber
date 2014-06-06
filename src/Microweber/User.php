@@ -1,4 +1,5 @@
 <?php
+
 namespace Microweber;
 
 
@@ -1403,8 +1404,8 @@ class User
                         $start = session_start();
                     } catch (ErrorExpression $e) {
                         if($is_ajax == false){
-                        session_regenerate_id();
-                        $start = session_id();
+                            session_regenerate_id();
+                            $start = session_id();
                         }
                     }
                     if ($start == false and $is_ajax == false) {
@@ -1707,7 +1708,7 @@ class User
     {
 
 
-        $template_dir = $this->app->content->template_dir();
+        $template_dir = $this->app->template->dir();
         $file = $template_dir . 'register.php';
         $default_url = false;
         if (is_file($file)) {
@@ -1735,7 +1736,7 @@ class User
     {
 
 
-        $template_dir = $this->app->content->template_dir();
+        $template_dir = $this->app->template->dir();
         $file = $template_dir . 'login.php';
         $default_url = false;
         if (is_file($file)) {
@@ -1763,7 +1764,7 @@ class User
     {
 
 
-        $template_dir = $this->app->content->template_dir();
+        $template_dir = $this->app->template->dir();
         $file = $template_dir . 'forgot_password.php';
         $default_url = false;
         if (is_file($file)) {

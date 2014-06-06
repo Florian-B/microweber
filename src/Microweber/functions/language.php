@@ -72,8 +72,13 @@ function __store_lang_file()
                     if (!is_dir($dn)) {
                         @mkdir($dn);
                     }
-                    if (is_writable($lang_file)) {
-                        file_put_contents($lang_file, $lang_file_str);
+                    if (isset($lang_file_str) and $lang_file_str != false) {
+                        if(!is_file($lang_file)){
+                            touch($lang_file);
+                        }
+                        if (is_writable($lang_file) and is_string($lang_file_str) and $lang_file_str != '') {
+                            @file_put_contents($lang_file, $lang_file_str);
+                        }
                     }
 
                 }
@@ -98,18 +103,11 @@ function __store_lang_file()
  */
 function current_lang()
 {
-
-
-    if (!defined('MW_LANG') and isset($lang)) {
-        define('MW_LANG', $lang);
-    }
-
+    $lang = false;
     if (defined('MW_LANG') and MW_LANG != false) {
+        $lang = MW_LANG;
         return MW_LANG;
     }
-
-
-    $lang = false;
 
 
     if (!isset($lang) or $lang == false) {
@@ -126,7 +124,7 @@ function current_lang()
     if (!isset($lang) or $lang == false) {
         $lang = 'en';
     }
-    $lang = str_replace('..', '', $lang);
+    //$lang = str_replace('..', '', $lang);
     $lang = str_replace('.', '', $lang);
     $lang = str_replace(DIRECTORY_SEPARATOR, '', $lang);
 

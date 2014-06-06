@@ -19,6 +19,7 @@ class Layouts
 {
 
     public $app;
+    private $external_layouts = array();
 
     function __construct($app = null)
     {
@@ -26,12 +27,17 @@ class Layouts
         if (!is_object($this->app)) {
 
             if (is_object($app)) {
+
                 $this->app = $app;
             } else {
+
                 $this->app = Application::getInstance();
             }
 
         }
+
+        //   print_r(debug_backtrace());
+
 
 
     }
@@ -50,14 +56,14 @@ class Layouts
      * @params $options['path'] if set i will look for layouts in this folder
      * @params $options['get_dynamic_layouts'] if set this function will scan for templates for the 'layout' module in all templates folders
      *
-     *
-     *
-     *
-     *
      */
     public function get_all($options = false)
     {
-        return $this->scan($options);
+        $layouts_from_template = $this->scan($options);
+        $external_layouts = $this->external_layouts;
+         $res = array_merge($layouts_from_template, $external_layouts);
+
+        return $res;
     }
 
     public function scan($options = false)
@@ -116,16 +122,13 @@ class Layouts
         $glob_patern = "*.php";
         $template_dirs = array();
         if (isset($options['get_dynamic_layouts'])) {
-
             $_dirs = glob(MW_TEMPLATES_DIR . '*', GLOB_ONLYDIR);
             $dir = array();
             foreach ($_dirs as $item) {
                 $possible_dir = $item . DS . 'modules' . DS . 'layout' . DS;
-
                 if (is_dir($possible_dir)) {
                     $template_dirs[] = $item;
                     $dir2 = rglob($possible_dir . '*.php', 0);
-                    // d($dir2);
                     if (!empty($dir2)) {
                         foreach ($dir2 as $dir_glob) {
                             $dir[] = $dir_glob;
@@ -133,10 +136,6 @@ class Layouts
                     }
                 }
             }
-
-
-            // d($dir);
-            //  return $dir;
         }
 
 
@@ -844,6 +843,12 @@ class Layouts
         }
 
 
+    }
+
+    function add_external($arr)
+    {
+        $this->external_layouts[] = ($arr);
+          return $this->external_layouts;
     }
 
 

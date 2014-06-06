@@ -73,6 +73,11 @@ class Application
     public function __construct($config = false)
     {
 
+//        if(isset($_REQUEST['d'])){
+//           print_r(debug_backtrace());
+//
+//        }
+ //
         if (empty($this->config)) {
             if ($config != false) {
                 if (is_string($config)) {
@@ -114,6 +119,12 @@ class Application
         //registering the global object to be the last instance
         global $_mw_global_object;
         $_mw_global_object = $this;
+        static $is_init = false;
+
+        if ($is_init == false) {
+            $is_init = true;
+            event_trigger('app_init', $this);
+        }
     }
 
     /**
@@ -278,7 +289,7 @@ class Application
                     $mw = $ns . '\\' . $property;
                     $mw = str_ireplace(array('/', '\\\\', $ns . '\\' . $ns), array('\\', '\\', $ns), $mw);
                 }
-
+               // var_dump($mw);
                 $prop = new $mw($this);
 
             } catch (Exception $e) {
@@ -316,6 +327,7 @@ class Application
             if (!isset($this->providers[$provider])) {
                 if (!is_object($provider)) {
                     if ($args != null) {
+
                         $this->providers[$provider] = new $provider($args);
                     } else {
                         $this->providers[$provider] = new $provider;

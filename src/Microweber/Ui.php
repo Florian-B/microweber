@@ -1,13 +1,68 @@
 <?php
 namespace Microweber;
-class Ui {
-
+class Ui
+{
 
 
     var $admin_menu = array();
-    public function admin($menu_array){
+    var $custom_fields = array();
+
+    function __construct()
+    {
+        $this->set_default_custom_fields();
+    }
+
+    function set_default_custom_fields()
+    {
+
+        $fields = array(
+            "text" => "Text Field",
+            "number" => "Number",
+            "price" => "Price",
+            "phone" => "Phone",
+            "site" => "Web Site",
+            "email" => "E-mail",
+            "address" => "Address",
+            "date" => "Date",
+            "upload" => "File Upload",
+            "radio" => "Single Choice",
+            "dropdown" => "Dropdown",
+            "checkbox" => "Multiple choices"
+        );
+
+        $this->custom_fields = $fields;
+//        foreach ($fields as $item) {
+//            $this->add_custom_field($item);
+//        }
+    }
+
+    public function admin($menu_array)
+    {
 
 
     }
+
+    public function admin_menu()
+    {
+        return $this->admin_menu;
+    }
+
+    function add_admin_menu($arr)
+    {
+        $this->admin_menu = array_merge($this->admin_menu, $arr);
+        return $this->admin_menu;
+    }
+
+    function custom_fields()
+    {
+        return $this->custom_fields;
+    }
+
+    function add_custom_field($arr)
+    {
+        $this->custom_fields = array_merge($this->custom_fields, $arr);
+        return $this->custom_fields;
+    }
+
 
 }

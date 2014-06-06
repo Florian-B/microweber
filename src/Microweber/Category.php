@@ -117,15 +117,18 @@ class Category
         } else {
             $depth_level_counter = 0;
         }
-        $nest_level_orig = $depth_level_counter;
-        if ($nest_level_orig == 0) {
-            $cache_content = $this->app->cache->get($function_cache_id, $cache_group);
-            if (($cache_content) != false) {
-                print $cache_content;
-                return;
-            }
 
+        if (!isset($params['no_cache'])) {
+            $nest_level_orig = $depth_level_counter;
+            if ($nest_level_orig == 0) {
+                $cache_content = $this->app->cache->get($function_cache_id, $cache_group);
+                if (($cache_content) != false) {
+                    print $cache_content;
+                    return;
+                }
+            }
         }
+
 
         $link = isset($params['link']) ? $params['link'] : false;
         if ($link == false) {
@@ -145,6 +148,7 @@ class Category
         } else {
             $remove_ids = false;
         }
+
 
         if (isset($params['removed_ids_code'])) {
             $removed_ids_code = $params['removed_ids_code'];
@@ -168,7 +172,11 @@ class Category
 
             $li_class_name = $params['li_class'];
         }
-
+        if (isset($params['users_can_create_content'])) {
+            $users_can_create_content = $params['users_can_create_content'];
+        } else {
+            $users_can_create_content = false;
+        }
         if (isset($params['li_class_name'])) {
 
             $li_class_name = $params['li_class_name'];
@@ -209,9 +217,17 @@ class Category
 
         }
 
+
         if (isset($params['for_page']) and $params['for_page'] != false) {
             $page = $this->app->content->get_by_id($params['for_page']);
-            $parent = $page['subtype_value'];
+            if ($page['subtype_value']) {
+                $parent = $page['subtype_value'];
+            } else {
+                $params['rel'] = 'content';
+                $params['rel_id'] = $params['for_page'];
+                $parent = 0;
+            }
+
         }
         $active_code_tag = false;
         if (isset($params['active_code_tag']) and $params['active_code_tag'] != false) {
@@ -237,7 +253,25 @@ class Category
                 $table_assoc_name = $this->app->db->assoc_table_name($params['for']);
                 $skip123 = true;
                 $str0 = 'no_cache=true&is_deleted=n&orderby=position asc&table=' . $table . '&limit=1000&data_type=category&what=categories&' . 'parent_id=0&rel=' . $table_assoc_name;
-                $fors = $this->app->db->get($str0);
+                $cat_get_params = array();
+                $cat_get_params['is_deleted'] = 'n';
+                $cat_get_params['orderby'] = 'position asc';
+                $cat_get_params['limit'] = '1000';
+                $cat_get_params['data_type'] = 'category';
+                $cat_get_params['no_cache'] = 1;
+                $cat_get_params['parent_id'] = '0';
+                $cat_get_params['table'] = $table;
+                $cat_get_params['rel'] = $table_assoc_name;
+                if ($users_can_create_content != false) {
+                    $cat_get_params['users_can_create_content'] = $users_can_create_content;
+                    $str0 = $str0 . '&users_can_create_content=' . $users_can_create_content;
+                    // unset( $cat_get_params['parent_id']);
+                }
+                $fors = $this->app->db->get($cat_get_params);
+                // $fors = $this->app->db->get($cat_get_params);
+                //  d($fors);
+                // exit;
+
             }
 
             if (!isset($params['content_id']) and isset($params['try_rel_id']) and intval($params['try_rel_id']) != 0) {
@@ -276,8 +310,22 @@ class Category
         if (isset($params['rel']) and $params['rel'] != false and isset($params['rel_id'])) {
             $table_assoc_name = $this->app->db->assoc_table_name($params['rel']);
             $skip123 = true;
-            $str0 = 'is_deleted=n&orderby=position asc&table=' . $table . '&limit=1000&data_type=category&what=categories&' . 'rel_id=' . intval($params['rel_id']) . '&rel=' . $table_assoc_name;
-            $fors = $this->app->db->get($str0);
+            $users_can_create_content_q = false;
+            $cat_get_params = array();
+            $cat_get_params['is_deleted'] = 'n';
+            $cat_get_params['orderby'] = 'position asc';
+            $cat_get_params['limit'] = '1000';
+            $cat_get_params['data_type'] = 'category';
+           // $cat_get_params['what'] = 'categories';
+            $cat_get_params['rel_id'] = intval($params['rel_id']);
+            $cat_get_params['table'] = $table;
+            $cat_get_params['rel'] = $table_assoc_name;
+            if ($users_can_create_content != false) {
+                $cat_get_params['users_can_create_content'] = $users_can_create_content;
+            }
+
+            //$str0 = 'is_deleted=n&orderby=position asc&table=' . $table . '&limit=1000&data_type=category&what=categories&' . 'rel_id=' . intval($params['rel_id']) . '&rel=' . $table_assoc_name;
+            $fors = $this->app->db->get($cat_get_params);
 
         }
 

@@ -29,17 +29,14 @@ class Fields
         }
 
         $this->tables = $this->app->content->tables;
-        
+
     }
 
     public function get_by_id($field_id)
     {
-
         if ($field_id != 0) {
             $data = $this->app->db->get_by_id('table_custom_fields', $id = $field_id, $is_this_field = false);
-            if (isset($data['options'])) {
-                $data['options'] = $this->app->format->base64_to_array($data['options']);
-            }
+            $data = $this->decode_array_vals($data);
             return $data;
         }
     }
@@ -301,7 +298,7 @@ class Fields
 		$sidq
 		ORDER BY position ASC
 		   ";
-
+// d($q);
             if ($debug != false) {
                 //
 
@@ -332,29 +329,31 @@ class Fields
                     $i = 1;
                     foreach ($q as $it) {
 
+
+                        $it = $this->decode_array_vals($it);
                         // $it ['value'] = $it ['custom_field_value'];
-                        $it['value'] = $it['custom_field_value'];
-                        if (isset($it['custom_field_value']) and strtolower($it['custom_field_value']) == 'array') {
-                            if (isset($it['custom_field_values']) and is_string($it['custom_field_values'])) {
-                                $try = base64_decode($it['custom_field_values']);
-                                if ($try != false and strlen($try) > 5) {
-                                    $it['custom_field_values'] = unserialize($try);
-                                }
-                                if(isset($it['custom_field_values']['value'])){
-                                    $temp = $it['custom_field_values']['value'];
-                                    if(is_array($it['custom_field_values']['value'])){
-                                        $temp = array();
-                                        foreach($it['custom_field_values']['value'] as $item1){
-                                            if($item1 != false){
-                                                $item1 = explode(',',$item1);
-                                                $temp = array_merge($temp,$item1);
-                                            }
-                                        }
-                                    }
-                                    $it['custom_field_values'] = $temp;
-                                }
-                            }
-                        }
+//                        $it['value'] = $it['custom_field_value'];
+//                        if (isset($it['custom_field_value']) and strtolower($it['custom_field_value']) == 'array') {
+//                            if (isset($it['custom_field_values']) and is_string($it['custom_field_values'])) {
+//                                $try = base64_decode($it['custom_field_values']);
+//                                if ($try != false and strlen($try) > 5) {
+//                                    $it['custom_field_values'] = unserialize($try);
+//                                }
+//                                if (isset($it['custom_field_values']['value'])) {
+//                                    $temp = $it['custom_field_values']['value'];
+//                                    if (is_array($it['custom_field_values']['value'])) {
+//                                        $temp = array();
+//                                        foreach ($it['custom_field_values']['value'] as $item1) {
+//                                            if ($item1 != false) {
+//                                                $item1 = explode(',', $item1);
+//                                                $temp = array_merge($temp, $item1);
+//                                            }
+//                                        }
+//                                    }
+//                                    $it['custom_field_values'] = $temp;
+//                                }
+//                            }
+//                        }
 
                         //  $it['values'] = $it['custom_field_value'];
 
@@ -437,6 +436,53 @@ class Fields
         $result = $this->app->url->replace_site_url_back($result);
         //d($result);
         return $result;
+    }
+
+    public function decode_array_vals($it)
+    {
+        if (isset($it['custom_field_value'])) {
+            $it['value'] = $it['custom_field_value'];
+            if (isset($it['custom_field_value']) and strtolower($it['custom_field_value']) == 'array') {
+                if (isset($it['custom_field_values']) and is_string($it['custom_field_values'])) {
+                    $try = base64_decode($it['custom_field_values']);
+                    if ($try != false and strlen($try) > 5) {
+                        $it['custom_field_values'] = unserialize($try);
+                    }
+                    if (isset($it['custom_field_values']['value'])) {
+                        $temp = $it['custom_field_values']['value'];
+                        if (is_array($it['custom_field_values']['value'])) {
+                            $temp = array();
+                            foreach ($it['custom_field_values']['value'] as $item1) {
+                                if ($item1 != false) {
+                                    $item1 = explode(',', $item1);
+                                    $temp = array_merge($temp, $item1);
+                                }
+                            }
+                        }
+                        $it['custom_field_values'] = $temp;
+                    }
+                }
+            }
+        }
+        if (isset($it['options'])) {
+            $it['options'] = $this->app->format->base64_to_array($it['options']);
+        }
+        return $it;
+    }
+
+    function get_value($content_id, $field_name, $return_full = false, $table = 'content')
+    {
+        $val = false;
+        $data = $this->get($table, $id = $content_id, $return_full, $field_for = false, $debug = false, $field_type = false, $for_session = false);
+        foreach ($data as $item) {
+            if (isset($item['custom_field_name']) and
+                ((strtolower($item['custom_field_name']) == strtolower($field_name))
+                    or (strtolower($item['custom_field_type']) == strtolower($item['custom_field_type'])))
+            ) {
+                $val = $item['custom_field_value'];
+            }
+        }
+        return $val;
     }
 
     public function reorder($data)
@@ -671,6 +717,16 @@ class Fields
         }
     }
 
+
+    /*document_ready('test_document_ready_api');
+
+    function test_document_ready_api($layout) {
+
+    //   $layout = modify_html($layout, $selector = '.editor_wrapper', 'append', 'ivan');
+    //$layout = modify_html2($layout, $selector = '<div class="editor_wrapper">', '');
+    return $layout;
+    }*/
+
     public function save($data)
     {
 
@@ -695,15 +751,33 @@ class Fields
         if (!isset($data_to_save['custom_field_type']) and isset($data_to_save['field_type']) and $data_to_save['field_type'] != '') {
             $data_to_save['custom_field_type'] = $data_to_save['field_type'];
         }
+
         if (!isset($data_to_save['custom_field_name']) and isset($data_to_save['field_name']) and $data_to_save['field_type'] != '') {
             $data_to_save['custom_field_name'] = $data_to_save['field_name'];
         }
+
+        if (isset($data_to_save['custom_field_type']) and !isset($data_to_save['custom_field_name'])) {
+            $data_to_save['custom_field_name'] = $data_to_save['custom_field_type'];
+        }
+
+
         if (!isset($data_to_save['custom_field_value']) and isset($data_to_save['field_value']) and $data_to_save['field_value'] != '') {
             $data_to_save['custom_field_value'] = $data_to_save['field_value'];
         }
         if (!isset($data_to_save['rel']) and isset($data_to_save['for'])) {
             $data_to_save['rel'] = $this->app->db->assoc_table_name($data_to_save['for']);
         }
+
+        if (!isset($data_to_save['cf_id']) and isset($data_to_save['id'])) {
+            $data_to_save['cf_id'] = $data_to_save['id'];
+        }
+
+        if (!isset($data_to_save['custom_field_is_active']) and isset($data_to_save['cf_id']) and $data_to_save['cf_id'] == 0) {
+            $data_to_save['custom_field_is_active'] = 'y';
+
+        }
+
+
         if (isset($data_to_save['cf_id'])) {
             $data_to_save['id'] = intval($data_to_save['cf_id']);
 
@@ -716,9 +790,11 @@ class Fields
                 if (!isset($data_to_save['rel_id'])) {
                     $data_to_save['rel_id'] = $form_data_from_id['rel_id'];
                 }
-
                 if (isset($form_data_from_id['custom_field_type']) and $form_data_from_id['custom_field_type'] != '' and (!isset($data_to_save['custom_field_type']) or ($data_to_save['custom_field_type']) == '')) {
                     $data_to_save['custom_field_type'] = $form_data_from_id['custom_field_type'];
+                }
+                if (isset($form_data_from_id['custom_field_name']) and $form_data_from_id['custom_field_name'] != '' and (!isset($data_to_save['custom_field_name']) or ($data_to_save['custom_field_name']) == '')) {
+                    $data_to_save['custom_field_name'] = $form_data_from_id['custom_field_name'];
                 }
             }
 
@@ -753,38 +829,39 @@ class Fields
             if (!isset($data_to_save['custom_field_name'])) {
                 return array('error' => 'You must set custom_field_name');
             }
-
-            if (!isset($data_to_save['custom_field_value'])) {
-                return array('error' => 'You must set custom_field_value');
-            }
-
             $cf_k = $data_to_save['custom_field_name'];
-            $cf_v = $data_to_save['custom_field_value'];
-            if (is_array($cf_v)) {
-                $cf_k_plain = $this->app->url->slug($cf_k);
-                $cf_k_plain = $this->app->db->escape_string($cf_k_plain);
-                $cf_k_plain = str_replace('-', '_', $cf_k_plain);
-                $data_to_save['custom_field_values'] = base64_encode(serialize($cf_v));
-                $val1_a = $this->app->format->array_values($cf_v);
-                //   $val1_a = array_pop($val1_a);
-                if (is_array($val1_a)) {
-                    $val1_a = implode(', ', $val1_a);
 
-                }
+            if (isset($data_to_save['custom_field_value'])) {
+                // return array('error' => 'You must set custom_field_value');
+                //  $data_to_save['custom_field_value'] = '';
+                $cf_v = $data_to_save['custom_field_value'];
+                if (is_array($cf_v)) {
+                    $cf_k_plain = $this->app->url->slug($cf_k);
+                    $cf_k_plain = $this->app->db->escape_string($cf_k_plain);
+                    $cf_k_plain = str_replace('-', '_', $cf_k_plain);
+                    $data_to_save['custom_field_values'] = base64_encode(serialize($cf_v));
+                    $val1_a = $this->app->format->array_values($cf_v);
+                    //   $val1_a = array_pop($val1_a);
+                    if (is_array($val1_a)) {
+                        $val1_a = implode(', ', $val1_a);
+
+                    }
 
 
-                if ($val1_a != 'Array') {
-                    $data_to_save['custom_field_values_plain'] = $val1_a;
-                    $data_to_save['custom_field_value'] =  'Array';
-                }
+                    if ($val1_a != 'Array') {
+                        $data_to_save['custom_field_values_plain'] = $val1_a;
+                        $data_to_save['custom_field_value'] = 'Array';
+                    }
 
-            } else {
-                if (strval($cf_v) != 'Array') {
-                    $val1_a = nl2br($cf_v, 1);
+                } else {
+                    if (strval($cf_v) != 'Array') {
+                        $val1_a = nl2br($cf_v, 1);
 
-                    $data_to_save['custom_field_values_plain'] = ($val1_a);
+                        $data_to_save['custom_field_values_plain'] = ($val1_a);
+                    }
                 }
             }
+
 
             $data_to_save['allow_html'] = true;
             //  $data_to_save['debug'] = true;
@@ -800,16 +877,6 @@ class Fields
 
         //exit
     }
-
-
-    /*document_ready('test_document_ready_api');
-
-    function test_document_ready_api($layout) {
-
-    //   $layout = modify_html($layout, $selector = '.editor_wrapper', 'append', 'ivan');
-    //$layout = modify_html2($layout, $selector = '<div class="editor_wrapper">', '');
-    return $layout;
-    }*/
 
     /**
      * names_for_table
