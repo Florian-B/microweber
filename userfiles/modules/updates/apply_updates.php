@@ -13,7 +13,7 @@ $update_api = new \Microweber\Update();
 
 <?php if (isset($_REQUEST['mw_version'])) { ?>
 
-    <h2><?php _e("Installing new version of Microweber"); ?>: <?php print  $_REQUEST['mw_version'] ?></h2>
+    <h2><?php _e("Installing new version of"); ?> <?php print mw()->ui->brand_name(); ?>: <?php print  $_REQUEST['mw_version'] ?></h2>
     <textarea>
         <?php $iudates = $update_api->install_version($_REQUEST['mw_version']);
         d($iudates);

@@ -1,7 +1,7 @@
 <?php if(!is_admin()){error("must be admin");}; ?>
  <?php $here = $config['url_to_module']; ?>
  
-<p>Microweber supports importing content from  <a href="<?php print $here; ?>samples/sample.csv">csv</a>, <a href="<?php print $here; ?>samples/sample.json">json</a>, <a href="<?php print $here; ?>samples/sample.xlsx">xls</a> and <a href="<?php print $here; ?>samples/other_cms.zip">other files</a>.</p>
+<p><?php print mw()->ui->brand_name(); ?> supports importing content from  <a href="<?php print $here; ?>samples/sample.csv">csv</a>, <a href="<?php print $here; ?>samples/sample.json">json</a>, <a href="<?php print $here; ?>samples/sample.xlsx">xls</a> and <a href="<?php print $here; ?>samples/other_cms.zip">other files</a>.</p>
 <div id="backups_list" >
   <h2>Avaiable import files</h2>
   <table   cellspacing="0" cellpadding="0" class="mw-ui-admin-table">

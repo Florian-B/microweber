@@ -51,7 +51,7 @@ $(document).ready(function(){
    }
 
    </style>
-  <div id="sign_logo_version"> <a href="http://microweber.com" target="_blank"><img src="<?php print MW_INCLUDES_URL; ?>img/sign_logo.png" alt="" /></a> <span class="mw-sign-version">Beta v. <?php print MW_VERSION; ?></span> </div>
+  <div id="sign_logo_version"> <a href="http://microweber.com" target="_blank"><img src="<?php print mw()->ui->admin_logo(); ?>" alt="" width="290" /></a> <span class="mw-sign-version">Beta v. <?php print MW_VERSION; ?></span> </div>
   <div class="vSpace"></div>
   <div class="mw-box">
     <div class="mw-box-content" id="admin_login">

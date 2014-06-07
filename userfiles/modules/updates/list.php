@@ -62,13 +62,13 @@ $(document).ready(function(){
     <?php if(isset($iudates["core_update"])): ?>
     <?php $is_up_to_date = false; ?>
     <tr class="mw-table-head">
-      <td colspan="3"><?php _e("New Microweber version available"); ?></td>
+      <td colspan="3"><?php _e("New"); ?> <?php print mw()->ui->brand_name(); ?> <?php _e("version available"); ?></td>
     </tr>
     <tr class="update-items">
       <td><label class="mw-ui-check">
           <input type="checkbox" name="mw_version" value="<?php print $iudates["version"] ?>"  />
           <span></span></label></td>
-      <td><img src="<?php print MW_INCLUDES_URL; ?>img/mw_system.png" alt="Microweber" /><br>
+      <td><?php print mw()->ui->brand_name(); ?><br>
         <span class="update-version"><?php print MW_VERSION ?></span></td>
       <td><h2> New version <?php print $iudates["version"] ?>
           <?php if(isset($item["description"])) : ?>

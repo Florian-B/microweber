@@ -1,6 +1,6 @@
 
 <div class="send-your-lang">
-  <label class="mw-ui-label"><small>Help us improve Microweber</small></label>
+  <label class="mw-ui-label"><small>Help us improve <?php print mw()->ui->brand_name(); ?></small></label>
   <a onclick="send_lang_form_to_microweber()" class="mw-ui-btn mw-ui-btn-blue">Send us your translation</a> </div>
 <?php only_admin_access(); ?>
 <label class="mw-ui-label left">
@@ -116,6 +116,6 @@ $cont  = get_language_file_content();
   </table>
 </form>
 <div class="send-your-lang" style="margin: 40px 0;">
-  <label class="mw-ui-label"><small>Help us improve Microweber</small></label>
+  <label class="mw-ui-label"><small>Help us improve <?php print mw()->ui->brand_name(); ?></small></label>
   <a onclick="send_lang_form_to_microweber()" class="mw-ui-btn mw-ui-btn-blue">Send us your translation</a> </div>
 <?php endif; ?>
