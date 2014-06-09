@@ -9,9 +9,8 @@ class Ui
     var $admin_logo = '';
     var $logo_live_edit = '';
     var $brand_name = 'Microweber';
+    var $powered_by_link = false;
 
-    var $powered_by = 'Create a website';
-    var $powered_by_link = 'http://microweber.com/';
     function __construct()
     {
 
@@ -51,10 +50,12 @@ class Ui
 
 
     }
+
     public function brand_name()
     {
         return $this->brand_name;
     }
+
     public function live_edit_logo()
     {
         return $this->logo_live_edit;
@@ -85,6 +86,17 @@ class Ui
     {
         $this->custom_fields = array_merge($this->custom_fields, $arr);
         return $this->custom_fields;
+    }
+
+    function powered_by_link()
+    {
+        $link = '<a href="https://microweber.com/" title="Create free Website &amp; Online Shop">Create Website</a> with <a href="https://microweber.com" target="_blank" title="Microweber CMS">Microweber</a>';
+        if ($this->powered_by_link != false) {
+            $link = $this->powered_by_link;
+        }
+
+        return $link;
+
     }
 
 
