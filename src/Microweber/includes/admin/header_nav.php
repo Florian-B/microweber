@@ -33,7 +33,7 @@
     <a class="mw-cube-holder " id="mw-admin-toolbar-cube" href="<?php print admin_url(); ?>view:content">
         <span class="mw-cube">
             <span class="mw-cube1">
-                 <span id="main-logo" style="background-image: url(<?php print mw()->ui->admin_logo(); ?>);"></span>
+                 <span id="main-logo" style="background-image: url('<?php print mw()->ui->admin_logo(); ?>');"></span>
             </span>
         </span> </a>
 	<div class="mw-v-cell" style="width: 100%">

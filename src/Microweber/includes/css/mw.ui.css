@@ -1941,11 +1941,12 @@ tr.active > td > .mw-ui-admin-table-show-on-hover{
 
 
 #main-logo{
-  height: 52px;
-  width: 201px;
-  display: block;
-  background-repeat: no-repeat;
-  background-size: contain;
+background-repeat: no-repeat;
+    background-size: contain;
+    display: block;
+    height: 30px;
+    margin: 11px;
+    width: 160px;
 }
 
 
